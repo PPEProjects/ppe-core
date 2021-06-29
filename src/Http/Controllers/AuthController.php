@@ -216,7 +216,7 @@ class AuthController extends Controller
                 ]);
             $info = json_decode($res->getBody()->getContents(),true);
             $newUser = [
-                'email' => $info['email'],
+                'email' => @$info['email'],
                 'platform' => 'facebook',
                 'access_token_social' => $accessToken['access_token'],
                 'first_name' => $info['first_name'],
@@ -224,6 +224,9 @@ class AuthController extends Controller
                 'social_id' =>$info['id'],
                 'avatar_attachment_id' => $info['picture']['data']['url']
             ];
+            if(empty($newUser['email'])){
+                $newUser['email'] = $newUser['platform'].'.'.$newUser['social_id'];
+            }
             $userCreate = User::updateOrCreate([
                 'email' => $newUser['email']
             ],
