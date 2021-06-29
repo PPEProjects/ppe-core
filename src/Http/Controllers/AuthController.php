@@ -229,11 +229,11 @@ class AuthController extends Controller
             ],
                 $newUser);
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
-            event(new \App\Events\LoginMessage(json_encode($userCreate),$this->pusher_channel));
             $res = [
                 'status'=>true,
                 'data'=>$userCreate,
             ];
+            event(new \App\Events\LoginMessage(json_encode($res),$this->pusher_channel));
             return response()->json($res);
         }
     }
