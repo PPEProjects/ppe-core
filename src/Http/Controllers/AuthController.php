@@ -93,6 +93,7 @@ class AuthController extends Controller
     public function generateUrl(Request $request)
     {
 
+        $this->pusher_channel = "notLogin". rand(00000, 99999);
         if ($request->platform == 'google') {
             $params = http_build_query([
                 'client_id' => config('services.google.client_id'),
@@ -103,10 +104,9 @@ class AuthController extends Controller
                 'prompt' => '',
                 'state' => json_encode([
                     'platform' => $request->platform,
-
+                    'pusher_channel' => $this->pusher_channel,
                 ])
             ]);
-            $rand = "notLogin". rand(00000, 99999);
             return response()->json([
                 'status' => true,
                 'data' => "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
@@ -124,6 +124,7 @@ class AuthController extends Controller
                 'display' =>'popup',
                 'state' =>json_encode([
                     'platform'=>$request->platform,
+                    'pusher_channel' => $this->pusher_channel,
                 ])
             ]);
             return response()->json([
@@ -143,6 +144,7 @@ class AuthController extends Controller
     {
         $state = json_decode($request->state, true);
         $client = new Client();
+        $this->pusher_channel = $state['pusher_channel'];
         if ($state['platform'] == 'google') {
             $data = [
                 'client_id' => config('services.google.client_id'),
