@@ -109,8 +109,10 @@ class AuthController extends Controller
             ]);
             return response()->json([
                 'status' => true,
-                'data' => "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
-                'pusher_channel' => $this->pusher_channel
+                'data' => [
+                    "url"=> "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
+                    'pusher_channel' => $this->pusher_channel,
+                ]
             ]);
         }
         //---------------------------FACEBOOK-----------------------------
@@ -129,8 +131,10 @@ class AuthController extends Controller
             ]);
             return response()->json([
                 'status'=>true,
-                'data'=>"https://www.facebook.com/v9.0/dialog/oauth?{$params}",
-                'pusher_channel' => $this->pusher_channel
+                'data'=>[
+                    "url" => "https://www.facebook.com/v9.0/dialog/oauth?{$params}",
+                    'pusher_channel' => $this->pusher_channel,
+                ]
             ]);
         }
         return response()->json([
@@ -181,8 +185,8 @@ class AuthController extends Controller
                 'email' => $newUser['email']
             ],
                 $newUser);
-            $singleToken = $userCreate->token = $userCreate->createToken('authToken')->accessToken;
-            event(new \App\Events\LoginMessage($singleToken,$this->pusher_channel));
+            $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
+            event(new \App\Events\LoginMessage(json_encode($userCreate),$this->pusher_channel));
             return response()->json([
                 'status' => true,
                 'data' => $userCreate
@@ -223,8 +227,8 @@ class AuthController extends Controller
                 'email' => $newUser['email']
             ],
                 $newUser);
-            $singleToken = $userCreate->token = $userCreate->createToken('authToken')->accessToken;
-            event(new \App\Events\LoginMessage($singleToken,$this->pusher_channel));
+            $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
+            event(new \App\Events\LoginMessage(json_encode($userCreate),$this->pusher_channel));
             return response()->json([
                 'status'=>true,
                 'data'=>$userCreate
