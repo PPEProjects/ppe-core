@@ -16,12 +16,9 @@ use ppeCore\dvtinh\Models\User;
 
 class AuthController extends Controller
 {
-    private $redirect_url;
+    private $pusher_channel;
     function __construct(){
-
-        $redirect_url = URL::to('ppe-core/auth/handle');
-        $redirect_url = str_replace('http:','https:',$redirect_url);
-        $this->redirect_url = $redirect_url;
+        $this->pusher_channel = "notLogin". rand(00000, 99999);
     }
     public function register(AuthRequest $request)
     {
@@ -95,6 +92,7 @@ class AuthController extends Controller
 
     public function generateUrl(Request $request)
     {
+
         if ($request->platform == 'google') {
             $params = http_build_query([
                 'client_id' => config('services.google.client_id'),
@@ -108,9 +106,11 @@ class AuthController extends Controller
 
                 ])
             ]);
+            $rand = "notLogin". rand(00000, 99999);
             return response()->json([
                 'status' => true,
-                'data' => "https://accounts.google.com/o/oauth2/v2/auth?{$params}"
+                'data' => "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
+                'pusher_channel' => $this->pusher_channel
             ]);
         }
         //---------------------------FACEBOOK-----------------------------
@@ -128,7 +128,8 @@ class AuthController extends Controller
             ]);
             return response()->json([
                 'status'=>true,
-                'data'=>"https://www.facebook.com/v9.0/dialog/oauth?{$params}"
+                'data'=>"https://www.facebook.com/v9.0/dialog/oauth?{$params}",
+                'pusher_channel' => $this->pusher_channel
             ]);
         }
         return response()->json([
@@ -179,7 +180,7 @@ class AuthController extends Controller
             ],
                 $newUser);
             $singleToken = $userCreate->token = $userCreate->createToken('authToken')->accessToken;
-            event(new \App\Events\LoginMessage($singleToken));
+            event(new \App\Events\LoginMessage($singleToken,$this->pusher_channel));
             return response()->json([
                 'status' => true,
                 'data' => $userCreate
@@ -221,7 +222,7 @@ class AuthController extends Controller
             ],
                 $newUser);
             $singleToken = $userCreate->token = $userCreate->createToken('authToken')->accessToken;
-            event(new \App\Events\LoginMessage($singleToken));
+            event(new \App\Events\LoginMessage($singleToken,$this->pusher_channel));
             return response()->json([
                 'status'=>true,
                 'data'=>$userCreate
