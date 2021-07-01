@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateCoreUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -60,6 +60,8 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        \Illuminate\Support\Facades\Log::channel('single')->info('nvt 2', []);
+        
         $this->schema->dropIfExists('users');
         Schema::connection("mysql")->dropIfExists('users');
     }
