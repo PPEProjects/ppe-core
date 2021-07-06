@@ -227,10 +227,27 @@ class AuthController extends Controller
             if(empty($newUser['email'])){
                 $newUser['email'] = $newUser['platform'].'.'.$newUser['social_id'];
             }
-            $userCreate = User::updateOrCreate([
+//            $userCreate = User::updateOrCreate([
+//                'email' => $newUser['email']
+//            ],
+//                $newUser);
+            $userCreate = User::where("email",$newUser['email'])->first();
+            if(!$userCreate){
+                $userCreate = User::updateOrCreate([
                 'email' => $newUser['email']
             ],
                 $newUser);
+            }else{
+                $newUser = [
+                    'platform' => 'facebook',
+                    'access_token_social' => $accessToken['access_token'],
+                    'social_id' =>$info['id']
+                ];
+                $userCreate = User::updateOrCreate([
+                    'email' => $newUser['email']
+                ],
+                    $newUser);
+            }
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
             $res = [
                 'status'=>true,
