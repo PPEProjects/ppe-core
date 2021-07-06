@@ -239,6 +239,7 @@ class AuthController extends Controller
                 $newUser);
             }else{
                 $newUser = [
+                    'email' => @$info['email'],
                     'platform' => 'facebook',
                     'access_token_social' => $accessToken['access_token'],
                     'social_id' =>$info['id']
