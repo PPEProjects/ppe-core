@@ -23,9 +23,11 @@ class CreateCorePasswordResetsTable extends Migration
     {
         $this->schema->dropIfExists('password_resets');
         $this->schema->create('password_resets', function (Blueprint $table) {
+            $table->id();
             $table->string('email')->index();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

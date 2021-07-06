@@ -11,6 +11,6 @@ namespace ppeCore\dvtinh\Models;
 
      protected $fillable = [
          'email',
-         'token',
+         'token'
      ];
  }
