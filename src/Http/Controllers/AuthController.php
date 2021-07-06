@@ -149,6 +149,7 @@ class AuthController extends Controller
         $state = json_decode($request->state, true);
         $client = new Client();
         $this->pusher_channel = $state['pusher_channel'];
+        //check then
         if ($state['platform'] == 'google') {
             $data = [
                 'client_id' => config('services.google.client_id'),
@@ -211,6 +212,7 @@ class AuthController extends Controller
         }
         //-------------------------------FACEBOOK------------------------------
         if ($state['platform'] == 'facebook'){
+            dd("ok");
             $res = $client->request('GET',"https://graph.facebook.com/v9.0/oauth/access_token",[
                 'query'=>[
                     'client_id' => config('services.facebook.client_id') ,
