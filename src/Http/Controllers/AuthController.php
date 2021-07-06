@@ -212,7 +212,6 @@ class AuthController extends Controller
         }
         //-------------------------------FACEBOOK------------------------------
         if ($state['platform'] == 'facebook'){
-            dd("ok");
             $res = $client->request('GET',"https://graph.facebook.com/v9.0/oauth/access_token",[
                 'query'=>[
                     'client_id' => config('services.facebook.client_id') ,
