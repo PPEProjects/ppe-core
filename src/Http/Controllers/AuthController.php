@@ -181,10 +181,25 @@ class AuthController extends Controller
                 'social_id' => $info['id'],
                 'avatar_attachment_id' => $info['picture']
             ];
-            $userCreate = User::updateOrCreate([
-                'email' => $newUser['email']
-            ],
-                $newUser);
+//            $userCreate = User::updateOrCreate([
+//                'email' => $newUser['email']
+//            ],
+//                $newUser);
+            $userCreate = User::where("email",$newUser['email'])->first();
+            if(!$userCreate){
+                $userCreate = User::create($newUser);
+            }else{
+                $newUser1 = [
+                    'email' => @$info['email'],
+                    'platform' => 'google',
+                    'access_token_social' => $accessToken['access_token'],
+                    'social_id' =>$info['id']
+                ];
+                $userCreate = User::updateOrCreate([
+                    'email' => $newUser1['email']
+                ],
+                    $newUser1);
+            }
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
             $res = [
                 'status'=>true,
@@ -222,7 +237,7 @@ class AuthController extends Controller
                 'first_name' => $info['first_name'],
                 'name' => $info['last_name'],
                 'social_id' =>$info['id'],
-                'avatar_attachment_id' => $info['picture']['data']['url']
+//                'avatar_attachment_id' => $info['picture']['data']['url']
             ];
             if(empty($newUser['email'])){
                 $newUser['email'] = $newUser['platform'].'.'.$newUser['social_id'];
@@ -233,10 +248,7 @@ class AuthController extends Controller
 //                $newUser);
             $userCreate = User::where("email",$newUser['email'])->first();
             if(!$userCreate){
-                $userCreate = User::updateOrCreate([
-                'email' => $newUser['email']
-            ],
-                $newUser);
+                $userCreate = User::create($newUser);
             }else{
                 $newUser1 = [
                     'email' => @$info['email'],
