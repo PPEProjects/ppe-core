@@ -238,16 +238,16 @@ class AuthController extends Controller
             ],
                 $newUser);
             }else{
-                $newUser = [
+                $newUser1 = [
                     'email' => @$info['email'],
                     'platform' => 'facebook',
                     'access_token_social' => $accessToken['access_token'],
                     'social_id' =>$info['id']
                 ];
                 $userCreate = User::updateOrCreate([
-                    'email' => $newUser['email']
+                    'email' => $newUser1['email']
                 ],
-                    $newUser);
+                    $newUser1);
             }
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
             $res = [
