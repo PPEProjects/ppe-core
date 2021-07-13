@@ -173,14 +173,14 @@ class AuthController extends Controller
                 ]);
             $info = json_decode($res->getBody()->getContents(), true);
             $newUser = [
-                'name' => $info['name'],
-                'email' => $info['email'],
+                'name' => @$info['name'],
+                'email' => @$info['email'],
                 'platform' => 'google',
-                'access_token_social' => $accessToken['access_token'],
-                'first_name' => $info['family_name'],
-                'last_name' => $info['given_name'],
-                'social_id' => $info['id'],
-                'avatar_attachment_id' => $info['picture']
+                'access_token_social' => @$accessToken['access_token'],
+                'first_name' => @$info['family_name'],
+                'last_name' => @$info['given_name'],
+                'social_id' => @$info['id'],
+                'avatar_attachment_id' => @$info['picture']
             ];
 //            $userCreate = User::updateOrCreate([
 //                'email' => $newUser['email']
@@ -234,10 +234,10 @@ class AuthController extends Controller
             $newUser = [
                 'email' => @$info['email'],
                 'platform' => 'facebook',
-                'access_token_social' => $accessToken['access_token'],
-                'first_name' => $info['first_name'],
-                'name' => $info['last_name'],
-                'social_id' =>$info['id'],
+                'access_token_social' => @$accessToken['access_token'],
+                'first_name' => @$info['first_name'],
+                'name' => @$info['last_name'],
+                'social_id' =>@$info['id'],
 //                'avatar_attachment_id' => $info['picture']['data']['url']
             ];
             if(empty($newUser['email'])){
@@ -254,8 +254,8 @@ class AuthController extends Controller
                 $newUser1 = [
                     'email' => @$info['email'],
                     'platform' => 'facebook',
-                    'access_token_social' => $accessToken['access_token'],
-                    'social_id' =>$info['id']
+                    'access_token_social' => @$accessToken['access_token'],
+                    'social_id' =>@$info['id']
                 ];
                 $userCreate = User::updateOrCreate([
                     'email' => $newUser1['email']
