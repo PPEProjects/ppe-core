@@ -37,7 +37,7 @@ class AuthRequest extends FormRequest
                     'required',
                     function ($attribute, $value, $fail) use ($req) {
                         if (User::where('email', '=', $value)->exists()) {
-                            return $fail(__('ppe.email_already_exists'));
+                            throw new \Error('This account is already in use');
                         }
                     },
                 ],
