@@ -35,7 +35,7 @@ class ResetPasswordController extends Controller
             'token' => rand(000000,999999),
         ]);
         if ($passwordReset) {
-            $user->notify(new ResetPasswordRequest($passwordReset->token));
+            $user->notify(new ResetPasswordRequest($passwordReset->token,$user->name));
         }
 
         return response()->json([

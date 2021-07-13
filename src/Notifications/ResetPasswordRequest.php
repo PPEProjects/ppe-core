@@ -4,18 +4,23 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Auth;
+use ppeCore\dvtinh\Models\User;
+
 class ResetPasswordRequest extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $token;
+    protected $name;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($token, $name)
     {
         $this->token = $token;
+        $this->name = $name;
     }
     /**
      * Get the notification's delivery channels.
@@ -36,8 +41,10 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting('Hello!')
-            ->line('Code :'.$this->token)
-            ->line('Thank you for using our application!');
+            ->greeting('Dear '. $this->name.'!')
+            ->line('The code to reset password for SmileEye:')
+            ->line($this->token)
+            ->line('Wish you a wonderfull day!')
+            ->line('SmileEye team');
     }
 }
