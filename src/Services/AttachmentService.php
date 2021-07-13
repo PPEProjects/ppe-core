@@ -59,6 +59,12 @@ class AttachmentService
                 $file =  $filePath;
                 return [$thumb, $file];
                 break;
+            case 'audio':
+                $filePath = asset('storage/' . $fileName);
+                $thumb = $filePath;
+                $file =  $filePath;
+                return [$thumb, $file];
+                break;
             case 'rar':
                 $filePath = asset('storage/' . $fileName);
                 $thumb = $filePath;
