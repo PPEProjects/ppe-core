@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use ppeCore\dvtinh\Http\Requests\AuthRequest;
 use ppeCore\dvtinh\Models\User;
+use ppeCore\dvtinh\Notifications\RegisterSuccessRequest;
 
 class AuthController extends Controller
 {
@@ -30,7 +31,7 @@ class AuthController extends Controller
             $user = User::create($req);
             DB::commit();
             $access_token = $user->createToken('authToken')->accessToken;
-
+            $user->notify(new RegisterSuccessRequest("okokokok",$user->name));
             return response_api(['user' => $user, 'access_token' => $access_token]);
             throw new Exception(__('ppe.something_wrong'));
         } catch (\PDOException $exception) {
