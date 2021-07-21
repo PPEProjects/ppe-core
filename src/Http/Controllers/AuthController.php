@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PDOException;
 use GuzzleHttp\Client;
+use GraphQL\Error\Error;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use ppeCore\dvtinh\Http\Requests\AuthRequest;
@@ -88,6 +89,8 @@ class AuthController extends Controller
             }else{
                 throw new Exception(__('ppe.something_wrong'));
             }
+        }else{
+            throw new Error("Your old password is not correct");
         }
     }
 
