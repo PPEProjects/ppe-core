@@ -47,7 +47,7 @@ class ResetPasswordController extends Controller
     {
         $passwordReset = PasswordReset::where('token', $request['token'])->first();
         if(!$passwordReset){
-            throw new Exception(__('ppe.token_invalid'));
+            throw new Exception(__('incorrect security code'));
         }
         $passwordReset->get();
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
