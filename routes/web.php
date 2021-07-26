@@ -22,7 +22,7 @@ Route::group(['prefix' => '/ppe-core/auth'], function() {
 });
 //Auth::routes(['verify' => true]);
 Route::get('email/verify/{id}', [VerificationController::class,'verify']);
-
+Route::post('/email-check', [ResetPasswordController::class,'checkMailExist']);
 //Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
 
