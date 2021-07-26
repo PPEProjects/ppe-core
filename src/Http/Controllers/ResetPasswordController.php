@@ -42,6 +42,15 @@ class ResetPasswordController extends Controller
         'status' => true,
         ]);
     }
+    public function checkMailExist(Request $request){
+        $result = User::where("email",$request->email)->first();
+        if($result) return response()->json([
+            'status' => true,
+        ]);
+        return response()->json([
+            'status' => false,
+        ]);
+    }
 
     public function reset(Request $request)
     {

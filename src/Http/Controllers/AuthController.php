@@ -85,7 +85,6 @@ class AuthController extends Controller
                 $user->save();
                 DB::commit();
                 return response_api(['message' => "success"]);
-                throw new Exception(__('ppe.something_wrong'));
             }else{
                 throw new Exception(__('ppe.something_wrong'));
             }
