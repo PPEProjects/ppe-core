@@ -16,6 +16,7 @@ Route::group(['prefix' => '/ppe-core/auth'], function() {
     Route::get('/generate-url',[AuthController::class,'generateUrl']);
     Route::get('/handle',[AuthController::class,'authHandle']);
     Route::post('/reset-password', [ResetPasswordController::class,'sendMail']);
+    Route::post('/email-check', [ResetPasswordController::class,'checkMailExist']);
     Route::post('/reset', [ResetPasswordController::class,'reset']);
 
 });
