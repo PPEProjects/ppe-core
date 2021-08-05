@@ -31,12 +31,15 @@ class AttachmentService
 //        return $data;
 //    }
 
-    public function getThumbFile($fileType, $fileName)
+    public function getThumbFile($fileType, $fileName, $type_gif = null)
     {
         switch ($fileType) {
             case 'image':
                 $imagePath = str_replace('/images/', '/thumb-images/', $fileName);
-                $imagePath = str_replace('.wepb', '.jpg', $imagePath);
+                if($type_gif == 'gif'){
+                    $imagePath = str_replace('.wepb', '.gif', $imagePath);
+                }
+                else $imagePath = str_replace('.wepb', '.jpg', $imagePath);
                 $thumb = asset('storage/' . $imagePath);
                 $file = asset('storage/' . $fileName);
                 return [$thumb, $file];
@@ -87,12 +90,15 @@ class AttachmentService
 //        return $imagePath;
 //    }
 
-    public function saveThumbImage($path, $imagePath)
+    public function saveThumbImage($path, $imagePath, $type_gif = null)
     {
         $imagePath = str_replace('/images/', '/thumb-images/', $imagePath);
-        $imagePath = str_replace('.wepb', '.jpg', $imagePath);
+        if($type_gif == 'gif'){
+            $imagePath = str_replace('.wepb', '.gif', $imagePath);
+        }
+        else
+         $imagePath = str_replace('.wepb', '.jpg', $imagePath);
         return Image::make($path)
-            ->fit(90, 90)
             ->save($imagePath, 100);
     }
 
@@ -119,13 +125,16 @@ class AttachmentService
                     imagealphablending($image, true);
                     imagesavealpha($image, true);
                     break;
-                case 'gif':
-                    $image = imagecreatefromgif($file);
-                    break;
+//                case 'gif':
+//                    $image = imagecreatefromgif($file);
+//                    break;
                 default:
-                    return false;
+                    return 'NOT_SUPPORT';
             }
-            $result = imagewebp($image, $outputFile, $compression_quality);
+            if($file_type == 'gif'){
+                $result = imagegif($image, $outputFile, $compression_quality);
+            }
+            else $result = imagewebp($image, $outputFile, $compression_quality);
             if (false === $result) {
                 return false;
             }
