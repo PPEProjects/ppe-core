@@ -99,6 +99,7 @@ class AttachmentService
         else
          $imagePath = str_replace('.wepb', '.jpg', $imagePath);
         return Image::make($path)
+            ->fit(90,90)
             ->save($imagePath, 100);
     }
 
