@@ -39,7 +39,8 @@ class User extends Authenticatable
         'phone_number',
         'quotes',
         'avatar_attachment_id',
-        'background_attachment_id'
+        'background_attachment_id',
+        'rules'
     ];
 
     /**
@@ -58,6 +59,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime'
+        'email_verified_at' => 'datetime',
+        'rules' => 'json',
     ];
 }
