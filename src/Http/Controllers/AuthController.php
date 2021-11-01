@@ -27,7 +27,7 @@ class AuthController extends Controller
         try {
             DB::beginTransaction();
             $req = $request->all();
-
+            $req['rules'] = ["user"];
             $req['password'] = Hash::make($req['password']);
             $user = User::create($req);
             DB::commit();
