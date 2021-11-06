@@ -40,7 +40,7 @@ class User extends Authenticatable
         'quotes',
         'avatar_attachment_id',
         'background_attachment_id',
-        'rules'
+        'rules',
     ];
 
     /**
