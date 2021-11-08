@@ -40,7 +40,8 @@ class User extends Authenticatable
         'quotes',
         'avatar_attachment_id',
         'background_attachment_id',
-        'rules',
+        'roles',
+        'role_label'
     ];
 
     /**
@@ -60,6 +61,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'rules' => 'json',
+        'roles' => 'json',
     ];
 }

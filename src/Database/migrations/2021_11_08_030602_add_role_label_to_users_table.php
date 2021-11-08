@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRuleToUsersTable extends Migration
+class AddRoleLabelToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +20,8 @@ class AddRuleToUsersTable extends Migration
     public function up()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->json("roles")->nullable()->after('password');
+            $table->string('role_label')->nullable()->after('rules');
+            $table->renameColumn('rules', 'roles');
         });
     }
 
@@ -32,7 +33,7 @@ class AddRuleToUsersTable extends Migration
     public function down()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->dropColumn('roles');
+            $table->dropColumn('roles_label');
         });
     }
 }
