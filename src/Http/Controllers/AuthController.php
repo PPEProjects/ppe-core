@@ -49,7 +49,7 @@ class AuthController extends Controller
         $payload = $request->all();
         $user = User::where('email',$payload['email'])->first();
         if ($user){
-            if (Hash::check($payload['password'],$user->password)){
+            if (Hash::check($payload['password'],$user->password) && $user->is_flag != true){
                 $user->token = $user->createToken('authToken')->accessToken;
                 return response()->json([
                     'status'=>true,

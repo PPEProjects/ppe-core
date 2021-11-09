@@ -41,7 +41,8 @@ class User extends Authenticatable
         'avatar_attachment_id',
         'background_attachment_id',
         'roles',
-        'role_label'
+        'role_label',
+        'is_flag'
     ];
 
     /**
