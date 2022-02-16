@@ -20,8 +20,7 @@ class AddRoleLabelToUsersTable extends Migration
     public function up()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->string('role_label')->nullable()->after('rules');
-            $table->renameColumn('rules', 'roles');
+            $table->string('role_label')->nullable()->after('roles');
         });
     }
 
