@@ -19,9 +19,9 @@ class AddRoleLabelToUsersTable extends Migration
     }
     public function up()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->string('role_label')->nullable()->after('roles');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->string('role_label')->nullable()->after('roles');
+        // });
     }
 
     /**
@@ -31,8 +31,8 @@ class AddRoleLabelToUsersTable extends Migration
      */
     public function down()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->dropColumn('roles_label');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->dropColumn('roles_label');
+        // });
     }
 }

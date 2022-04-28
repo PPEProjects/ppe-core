@@ -19,9 +19,9 @@ class AddRuleToUsersTable extends Migration
     }
     public function up()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->json("roles")->nullable()->after('password');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->json("roles")->nullable()->after('password');
+        // });
     }
 
     /**
@@ -31,8 +31,8 @@ class AddRuleToUsersTable extends Migration
      */
     public function down()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->dropColumn('roles');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->dropColumn('roles');
+        // });
     }
 }

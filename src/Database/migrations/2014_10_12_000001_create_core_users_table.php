@@ -29,6 +29,8 @@ class CreateCoreUsersTable extends Migration
             $table->string('name');
             $table->string('platform')->default("email");
             $table->string('email')->unique();
+            $table->json("roles")->nullable();
+            $table->string('role_label')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->text('access_token_social')->nullable();
             $table->text('social_id')->nullable();
@@ -36,8 +38,9 @@ class CreateCoreUsersTable extends Migration
             $table->string('username')->nullable();
             $table->string('password')->nullable();
             $table->string('quotes')->nullable();
-            $table->json('avatar_attachment_id')->nullable();
-            $table->json('background_attachment_id')->nullable();
+            $table->json('avatar_attachment')->nullable();
+            $table->json('background_attachment')->nullable();
+            $table->boolean('is_flag')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

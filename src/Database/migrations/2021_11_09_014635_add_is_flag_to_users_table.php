@@ -19,9 +19,9 @@ class AddIsFlagToUsersTable extends Migration
     }
     public function up()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->boolean('is_flag')->nullable()->after('role_label');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->boolean('is_flag')->nullable()->after('role_label');
+        // });
     }
 
     /**
@@ -31,8 +31,8 @@ class AddIsFlagToUsersTable extends Migration
      */
     public function down()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->dropColumn('is_flag');
-        });
+        // $this->schema->table('users', function (Blueprint $table) {
+        //     $table->dropColumn('is_flag');
+        // });
     }
 }
