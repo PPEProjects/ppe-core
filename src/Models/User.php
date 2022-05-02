@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'avatar',
+        'banner',
         'first_name',
         'platform',
         'access_token_social',
@@ -44,7 +45,11 @@ class User extends Authenticatable
         'background_attachment',
         'roles',
         'role_label',
-        'is_flag'
+        'is_flag',
+        'country',
+        'date_of_birth',
+        'gender',
+        'address'
     ];
 
     /**
