@@ -75,5 +75,6 @@ class User extends Authenticatable
     ];
     protected  $attributes = [
         'avatar' => 'https://i.imgur.com/jfZDmVD.png',
+        'banner' => 'https://i.imgur.com/TGrWoue.jpg'
     ];
 }
