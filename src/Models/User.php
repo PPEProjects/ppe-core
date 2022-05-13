@@ -73,4 +73,7 @@ class User extends Authenticatable
         'avatar_attachment' => 'json',
         'background_attachment' => 'json',
     ];
+    protected  $attributes = [
+        'avatar' => 'https://i.imgur.com/jfZDmVD.png',
+    ];
 }
