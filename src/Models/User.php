@@ -49,7 +49,8 @@ class User extends Authenticatable
         'country',
         'date_of_birth',
         'gender',
-        'address'
+        'address',
+        'current_address'
     ];
 
     /**
@@ -72,6 +73,7 @@ class User extends Authenticatable
         'roles' => 'json',
         'avatar_attachment' => 'json',
         'background_attachment' => 'json',
+        'current_address' => 'json',
     ];
     protected  $attributes = [
         'avatar' => 'https://i.imgur.com/jfZDmVD.png',

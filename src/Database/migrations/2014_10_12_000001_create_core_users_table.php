@@ -32,6 +32,7 @@ class CreateCoreUsersTable extends Migration
             $table->json("roles")->nullable();
             $table->string('role_label')->nullable();
             $table->string('country')->nullable();
+            $table->json("current_address")->nullable();
             $table->string('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->timestamp('email_verified_at')->nullable();
