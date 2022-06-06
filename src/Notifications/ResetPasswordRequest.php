@@ -42,7 +42,7 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->greeting('Dear '. $this->name.'!')
-            ->line('The code to reset password for SmileEye:')
+            ->line('The code to reset password for SmileEye is:')
             ->line($this->token)
             ->line('Wish you a wonderfull day!');
     }
