@@ -44,6 +44,7 @@ class User extends Authenticatable
         'avatar_attachment',
         'background_attachment',
         'roles',
+        'permission',
         'role_label',
         'is_flag',
         'country',
@@ -71,6 +72,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'roles' => 'json',
+        'permission' => 'json',
         'avatar_attachment' => 'json',
         'background_attachment' => 'json',
         'current_address' => 'json',
