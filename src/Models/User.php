@@ -82,6 +82,8 @@ class User extends Authenticatable
         'banner' => 'https://i.imgur.com/TGrWoue.jpg'
     ];
 
+
+
     public function assignRole($role)
     {
         $type = gettype($role);
@@ -132,6 +134,18 @@ class User extends Authenticatable
         $userHasRole = UserHasRole::where("user_id", $this->id)
                                     ->where("role_id", @$role->id)
                                     ->first();
+        if(isset($userHasRole)){
+            return true;
+        }
+        return false;
+    }
+
+    public function hasRole($role)
+    {
+        $role =  Role::where("name", $role)->first();
+        $userHasRole = UserHasRole::where("user_id", $this->id)
+            ->where("role_id", @$role->id)
+            ->first();
         if(isset($userHasRole)){
             return true;
         }

@@ -35,6 +35,7 @@ class Role extends Model
     protected $casts = [];
     protected  $attributes = [];
 
+
     public function givePermissionTo($permission){
         $type = gettype($permission);
         switch ($type){
@@ -93,4 +94,5 @@ class Role extends Model
                                                 ->pluck("permission_id");
         return Permission::whereIn("id", @$roleHasPermission ?? [])->get();
     }
+
 }
