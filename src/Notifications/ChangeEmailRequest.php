@@ -45,6 +45,6 @@ class ChangeEmailRequest extends Notification implements ShouldQueue
             ->greeting('Dear '. $this->name.'!')
             ->line("Click to confirm email for SmileEye is:")
             ->line(new HtmlString("<a href='$this->link'>Click here</a>"))
-            ->line('Wish you a wonderfull day!');
+            ->line('Wish you a wonderful day!');
     }
 }

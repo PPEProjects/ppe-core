@@ -43,7 +43,7 @@ class RegisterSuccessRequest extends Notification implements ShouldQueue
         return (new MailMessage)
             ->greeting('Dear '. $this->name.'!')
             ->line('Thank you for using our platform')
-            ->line('Wish you a wonderfull day!')
+            ->line('Wish you a wonderful day!')
             ->line('SmileEye team');
     }
 }
