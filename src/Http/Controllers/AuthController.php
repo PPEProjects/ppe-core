@@ -50,11 +50,22 @@ class AuthController extends Controller
         $user = User::where('email',$payload['email'])->first();
         if ($user){
             if (Hash::check($payload['password'],$user->password) && $user->is_flag != true){
-                $user->tokens->each(function($token, $key) {
-                    $token->delete();
-                });
-                $user->makeHidden(["tokens"]);
-                $user->token = $user->createToken('authToken')->accessToken;
+                $ipAddress = request()->getClientIp();
+                $DB = env("DB_CORE_DATABASE");
+                $userToken = DB::table("$DB.oauth_access_tokens")
+                    ->where("user_id", $user->id)
+                    ->orderBy("created_at", "DESC")
+                    ->first();
+                $getName = explode("-",$userToken->name);
+                $getIp = end($getName);
+                if($ipAddress != $getIp){
+                    $user->tokens->each(function($token, $key) {
+                        $token->delete();
+                    });
+                    $user->makeHidden(["tokens"]);
+                }
+                $user->token = $user->createToken("authToken-$ipAddress")->accessToken;
+
                 return response()->json([
                     'status'=>true,
                     'data'=>$user
