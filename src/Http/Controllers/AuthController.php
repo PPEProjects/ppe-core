@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Token;
 use PDOException;
 use GuzzleHttp\Client;
 use GraphQL\Error\Error;
@@ -58,14 +59,16 @@ class AuthController extends Controller
 //                    ->first();
 //                $getName = explode("-",$userToken->name);
 //                $getIp = end($getName);
-//                if($ipAddress != $getIp){
-                    $user->tokens->each(function($token, $key) {
-                        $token->delete();
-                    });
-                    $user->makeHidden(["tokens"]);
+//                    $user->tokens->each(function($token, $key) {
+//                        $token->delete();
+//                    });
+//                    $user->makeHidden(["tokens"]);
 //                }
-                $user->token = $user->createToken("authToken-$ipAddress")->accessToken;
-
+                $token = $user->createToken("authToken-$ipAddress");
+               $test = Token::where("user_id", $user->id)->get();
+                dd($test->toArray());
+                $token = $token->accessToken;
+                tap(User::findOrFail($user->id))->update(["remember_token" => $token->token->id."-$ipAddress"]);
                 return response()->json([
                     'status'=>true,
                     'data'=>$user
