@@ -50,6 +50,10 @@ class AuthController extends Controller
         $user = User::where('email',$payload['email'])->first();
         if ($user){
             if (Hash::check($payload['password'],$user->password) && $user->is_flag != true){
+                $user->tokens->each(function($token, $key) {
+                    $token->delete();
+                });
+                $user->makeHidden(["tokens"]);
                 $user->token = $user->createToken('authToken')->accessToken;
                 return response()->json([
                     'status'=>true,
