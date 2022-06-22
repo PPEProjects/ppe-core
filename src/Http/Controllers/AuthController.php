@@ -63,6 +63,7 @@ class AuthController extends Controller
                     });
                     $user->makeHidden(["tokens"]);
                 }
+                $user->ip = $ipAddress;
                 $user->token = $user->createToken("authToken-$ipAddress")->accessToken;
                 return response()->json([
                     'status'=>true,
