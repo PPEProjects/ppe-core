@@ -66,7 +66,7 @@ class AuthController extends Controller
 //                }
                 $token = $user->createToken("authToken-$ipAddress");
                $test = Token::where("user_id", $user->id)->get();
-                dd($test->toArray());
+//                dd($test->toArray());
                 $token = $token->accessToken;
                 tap(User::findOrFail($user->id))->update(["remember_token" => $token->token->id."-$ipAddress"]);
                 return response()->json([
