@@ -52,23 +52,18 @@ class AuthController extends Controller
         if ($user){
             if (Hash::check($payload['password'],$user->password) && $user->is_flag != true){
                 $ipAddress = request()->getClientIp();
-//                $DB = env("DB_CORE_DATABASE");
-//                $userToken = DB::table("$DB.oauth_access_tokens")
-//                    ->where("user_id", $user->id)
-//                    ->orderBy("created_at", "DESC")
-//                    ->first();
-//                $getName = explode("-",$userToken->name);
-//                $getIp = end($getName);
-//                    $user->tokens->each(function($token, $key) {
-//                        $token->delete();
-//                    });
-//                    $user->makeHidden(["tokens"]);
-//                }
-                $token = $user->createToken("authToken-$ipAddress");
-               $test = Token::where("user_id", $user->id)->get();
-//                dd($test->toArray());
-                $token = $token->accessToken;
-                tap(User::findOrFail($user->id))->update(["remember_token" => $token->token->id."-$ipAddress"]);
+                $userToken = Token::where("user_id", $user->id)
+                    ->orderBy("created_at", "DESC")
+                    ->first();
+                $getName = explode("-",$userToken->name);
+                $getIp = end($getName);
+                if($ipAddress != $getIp){
+                    $user->tokens->each(function($token, $key) {
+                        $token->delete();
+                    });
+                    $user->makeHidden(["tokens"]);
+                }
+                $user->token = $user->createToken("authToken-$ipAddress")->accessToken;
                 return response()->json([
                     'status'=>true,
                     'data'=>$user
