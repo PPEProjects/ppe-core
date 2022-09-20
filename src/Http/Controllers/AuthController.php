@@ -28,14 +28,18 @@ class AuthController extends Controller
         try {
             DB::beginTransaction();
             $req = $request->all();
-            $req['role_label'] = "student";
-            $req['password'] = Hash::make($req['password']);
-            $user = User::create($req);
-            DB::commit();
-            $access_token = $user->createToken('authToken')->accessToken;
-            $user->notify(new RegisterSuccessRequest("okokokok",$user->name));
-            return response_api(['user' => $user, 'access_token' => $access_token]);
-            throw new Exception(__('ppe.something_wrong'));
+            $user = User::where('email',$req['email'])->first();
+            if(!$user) {
+                $req['role_label'] = "student";
+                $req['password'] = Hash::make($req['password']);
+                $user = User::create($req);
+                DB::commit();
+                $access_token = $user->createToken('authToken')->accessToken;
+                $user->notify(new RegisterSuccessRequest("okokokok", $user->name));
+                return response_api(['user' => $user, 'access_token' => $access_token]);
+                throw new Exception(__('ppe.something_wrong'));
+            }
+            throw new Exception(__('ppe.invalid_credentials'));
         } catch (\PDOException $exception) {
             DB::rollBack();
             throw new PDOException($exception->getMessage());
