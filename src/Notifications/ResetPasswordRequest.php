@@ -41,6 +41,7 @@ class ResetPasswordRequest extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
+            ->from('tien.luckyfor@gmail.com', 'PPE')
             ->greeting('Dear '. $this->name.'!')
             ->line('The code to reset password for SmileEye is:')
             ->line($this->token)

@@ -42,6 +42,7 @@ class ChangeEmailRequest extends Notification implements ShouldQueue
     public function toMail()
     {
         return (new MailMessage)
+            ->from('tien.luckyfor@gmail.com', 'PPE')
             ->greeting('Dear '. $this->name.'!')
             ->line("Click to confirm email for SmileEye is:")
             ->line(new HtmlString("<a href='$this->link'>Click here</a>"))
