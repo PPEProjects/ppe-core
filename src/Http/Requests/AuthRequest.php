@@ -41,7 +41,7 @@ class AuthRequest extends FormRequest
                         }
                     },
                 ],
-                'password' => 'required|min:8|confirmed',
+                'password' => 'required|min:4|confirmed',
                 'name' => 'required',
             ];
         }

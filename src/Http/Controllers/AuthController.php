@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Token;
 use PDOException;
 use GuzzleHttp\Client;
@@ -20,16 +21,19 @@ use ppeCore\dvtinh\Notifications\RegisterSuccessRequest;
 class AuthController extends Controller
 {
     private $pusher_channel;
-    function __construct(){
-        $this->pusher_channel = "notLogin". rand(00000, 99999);
+
+    function __construct()
+    {
+        $this->pusher_channel = "notLogin" . rand(00000, 99999);
     }
+
     public function register(AuthRequest $request)
     {
         try {
             DB::beginTransaction();
             $req = $request->all();
-            $user = User::where('email',$req['email'])->first();
-            if(!$user) {
+            $user = User::where('email', $req['email'])->first();
+            if (!$user) {
                 $req['role_label'] = "student";
                 $req['password'] = Hash::make($req['password']);
                 $user = User::create($req);
@@ -52,9 +56,9 @@ class AuthController extends Controller
     public function login(AuthRequest $request)
     {
         $payload = $request->all();
-        $user = User::where('email',$payload['email'])->first();
-        if ($user){
-            if (Hash::check($payload['password'],$user->password) && $user->is_flag != true){
+        $user = User::where('email', $payload['email'])->first();
+        if ($user) {
+            if (Hash::check($payload['password'], $user->password) && $user->is_flag != true) {
 //                $ipAddress = request()->getClientIp();
 //                $userToken = Token::where("user_id", $user->id)
 //                    ->orderBy("created_at", "DESC")
@@ -62,15 +66,18 @@ class AuthController extends Controller
 //                $getName = explode("-",$userToken->name);
 //                $getIp = end($getName);
 //                if($ipAddress != $getIp){
-                    $user->tokens->each(function($token, $key) {
+                Log::channel('single')->info('$user->tokens', [$user->tokens]);
+                $user->tokens->each(function ($token, $key) {
+//                    Log::channel('single')->info('$key', [$key]);
+                    if ($key >= 1)
                         $token->delete();
-                    });
-                    $user->makeHidden(["tokens"]);
+                });
+                $user->makeHidden(["tokens"]);
 //                }
                 $user->token = $user->createToken("authToken")->accessToken;
                 return response()->json([
-                    'status'=>true,
-                    'data'=>$user
+                    'status' => true,
+                    'data' => $user
                 ]);
             }
         }
@@ -80,32 +87,36 @@ class AuthController extends Controller
 //            'message'=>'username or pass wrongs'
 //        ]);
     }
-    public function logout(){
-        Auth::user()->tokens->each(function($token, $key) {
+
+    public function logout()
+    {
+        Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
         return response()->json([
-            'status'=>true,
-            'message'=>'logout success'
+            'status' => true,
+            'message' => 'logout success'
         ]);
     }
-    public function changePass(Request $request){
+
+    public function changePass(Request $request)
+    {
         $old_pass = $request["old_password"];
         $new_pass = $request["new_password"];
         $confirm_pass = $request["confirm_password"];
 
         $user = Auth::user();
-        if (Hash::check($old_pass,$user->password)){
-            if ($new_pass == $confirm_pass && !Hash::check($new_pass,$user->password)){
+        if (Hash::check($old_pass, $user->password)) {
+            if ($new_pass == $confirm_pass && !Hash::check($new_pass, $user->password)) {
                 DB::beginTransaction();
                 $user->password = Hash::make($new_pass);
                 $user->save();
                 DB::commit();
                 return response_api(['message' => "success"]);
-            }else{
+            } else {
                 throw new Exception(__('ppe.something_wrong'));
             }
-        }else{
+        } else {
             throw new Error("Your old password is not correct");
         }
     }
@@ -113,7 +124,7 @@ class AuthController extends Controller
     public function generateUrl(Request $request)
     {
 
-        $this->pusher_channel = "notLogin". rand(00000, 99999);
+        $this->pusher_channel = "notLogin" . rand(00000, 99999);
         if ($request->platform == 'google') {
             $params = http_build_query([
                 'client_id' => config('services.google.client_id'),
@@ -130,36 +141,36 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => [
-                    "url"=> "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
+                    "url" => "https://accounts.google.com/o/oauth2/v2/auth?{$params}",
                     'pusher_channel' => $this->pusher_channel,
                 ]
             ]);
         }
         //---------------------------FACEBOOK-----------------------------
-        if ($request->platform=='facebook'){
+        if ($request->platform == 'facebook') {
             $params = http_build_query([
-                'client_id' => config('services.facebook.client_id') ,
+                'client_id' => config('services.facebook.client_id'),
                 'redirect_uri' => config('services.facebook.redirect'),
-                'scope'=>'email',
-                'response_type'=>'code',
+                'scope' => 'email',
+                'response_type' => 'code',
                 'auth_type' => 'rerequest',
-                'display' =>'popup',
-                'state' =>json_encode([
-                    'platform'=>$request->platform,
+                'display' => 'popup',
+                'state' => json_encode([
+                    'platform' => $request->platform,
                     'pusher_channel' => $this->pusher_channel,
                 ])
             ]);
             return response()->json([
-                'status'=>true,
-                'data'=>[
+                'status' => true,
+                'data' => [
                     "url" => "https://www.facebook.com/v9.0/dialog/oauth?{$params}",
                     'pusher_channel' => $this->pusher_channel,
                 ]
             ]);
         }
         return response()->json([
-            'status' =>   false,
-            'message'=> 'something was wrong !',
+            'status' => false,
+            'message' => 'something was wrong !',
         ]);
     }
 
@@ -206,15 +217,15 @@ class AuthController extends Controller
 //                'email' => $newUser['email']
 //            ],
 //                $newUser);
-            $userCreate = User::where("email",$newUser['email'])->first();
-            if(!$userCreate){
+            $userCreate = User::where("email", $newUser['email'])->first();
+            if (!$userCreate) {
                 $userCreate = User::create($newUser);
-            }else{
+            } else {
                 $newUser1 = [
                     'email' => @$info['email'],
                     'platform' => 'google',
                     'access_token_social' => $accessToken['access_token'],
-                    'social_id' =>$info['id']
+                    'social_id' => $info['id']
                 ];
                 $userCreate = User::updateOrCreate([
                     'email' => $newUser1['email']
@@ -223,59 +234,59 @@ class AuthController extends Controller
             }
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
             $res = [
-                'status'=>true,
-                'data'=>$userCreate,
+                'status' => true,
+                'data' => $userCreate,
             ];
-            event(new \App\Events\LoginMessage(json_encode($res),$this->pusher_channel));
+            event(new \App\Events\LoginMessage(json_encode($res), $this->pusher_channel));
             return response()->json($res);
 
         }
         //-------------------------------FACEBOOK------------------------------
-        if ($state['platform'] == 'facebook'){
-            $res = $client->request('GET',"https://graph.facebook.com/v9.0/oauth/access_token",[
-                'query'=>[
-                    'client_id' => config('services.facebook.client_id') ,
-                    'client_secret' => config('services.facebook.client_secret') ,
+        if ($state['platform'] == 'facebook') {
+            $res = $client->request('GET', "https://graph.facebook.com/v9.0/oauth/access_token", [
+                'query' => [
+                    'client_id' => config('services.facebook.client_id'),
+                    'client_secret' => config('services.facebook.client_secret'),
                     'redirect_uri' => config('services.facebook.redirect'),
-                    'code'=>$request->code,
+                    'code' => $request->code,
                 ]
             ]);
-            $accessToken = json_decode($res->getBody()->getContents(),true);
-            $res = $client->request('GET',"https://graph.facebook.com/v9.0/me",
+            $accessToken = json_decode($res->getBody()->getContents(), true);
+            $res = $client->request('GET', "https://graph.facebook.com/v9.0/me",
                 [
-                    'headers'=>[
-                        'Authorization'=>"Bearer {$accessToken['access_token']}",
+                    'headers' => [
+                        'Authorization' => "Bearer {$accessToken['access_token']}",
                     ],
-                    'query'=>[
-                        'fields'=>'id,email,first_name,last_name,picture'
+                    'query' => [
+                        'fields' => 'id,email,first_name,last_name,picture'
                     ]
                 ]);
-            $info = json_decode($res->getBody()->getContents(),true);
+            $info = json_decode($res->getBody()->getContents(), true);
             $newUser = [
                 'email' => @$info['email'],
                 'platform' => 'facebook',
                 'access_token_social' => @$accessToken['access_token'],
                 'first_name' => @$info['first_name'],
                 'name' => @$info['last_name'],
-                'social_id' =>@$info['id'],
+                'social_id' => @$info['id'],
 //                'avatar_attachment_id' => $info['picture']['data']['url']
             ];
-            if(empty($newUser['email'])){
-                $newUser['email'] = $newUser['platform'].'.'.$newUser['social_id'];
+            if (empty($newUser['email'])) {
+                $newUser['email'] = $newUser['platform'] . '.' . $newUser['social_id'];
             }
 //            $userCreate = User::updateOrCreate([
 //                'email' => $newUser['email']
 //            ],
 //                $newUser);
-            $userCreate = User::where("email",$newUser['email'])->first();
-            if(!$userCreate){
+            $userCreate = User::where("email", $newUser['email'])->first();
+            if (!$userCreate) {
                 $userCreate = User::create($newUser);
-            }else{
+            } else {
                 $newUser1 = [
                     'email' => @$info['email'],
                     'platform' => 'facebook',
                     'access_token_social' => @$accessToken['access_token'],
-                    'social_id' =>@$info['id']
+                    'social_id' => @$info['id']
                 ];
                 $userCreate = User::updateOrCreate([
                     'email' => $newUser1['email']
@@ -284,14 +295,13 @@ class AuthController extends Controller
             }
             $userCreate->access_token = $userCreate->createToken('authToken')->accessToken;
             $res = [
-                'status'=>true,
-                'data'=>$userCreate,
+                'status' => true,
+                'data' => $userCreate,
             ];
-            event(new \App\Events\LoginMessage(json_encode($res),$this->pusher_channel));
+            event(new \App\Events\LoginMessage(json_encode($res), $this->pusher_channel));
             return response()->json($res);
         }
     }
-
 
 
 }
